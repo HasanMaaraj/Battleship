@@ -1,0 +1,32 @@
+:root {
+    --earth-color: #BC986A;
+    --light-earth-color: #DAAD86;
+    --sea-color: #659DBD;
+    --tree-color: #8D8741;
+    --danger-color: #FF5B00;
+    --safe-color: #CCFFFF;
+    --steel-color: #CED2D7;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    color: var(--steel-color);
+}
+
+header,
+footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--earth-color);
+    height: max(10vh, 75px);
+}
+
+main {
+    background-color: var(--tree-color);
+    height: max(80vh, 600px);
+}
+
+/* footer {
+    height: max(10vh, 75px);
+} */
