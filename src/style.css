@@ -1,11 +1,12 @@
 :root {
-    --earth-color: #BC986A;
-    --light-earth-color: #DAAD86;
+    --earth-color: #8D8741;
+    --light-earth-color: #a1961a;
     --sea-color: #659DBD;
-    --tree-color: #8D8741;
+    --light-sea-color: #659DBD;
+    --dark-sea-color: #486591;
     --danger-color: #FF5B00;
     --safe-color: #CCFFFF;
-    --steel-color: #CED2D7;
+    --steel-color: #A8B0B2;
 }
 
 body {
@@ -18,12 +19,12 @@ footer {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: var(--earth-color);
+    background-color: var(--light-earth-color);
     height: max(10vh, 75px);
 }
 
 main {
-    background-color: var(--tree-color);
+    background-color: var(--dark-sea-color);
     height: max(80vh, 600px);
 }
 
