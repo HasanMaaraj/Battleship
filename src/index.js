@@ -61,8 +61,13 @@ const gameboardFactory = () => {
 }
 
 const boardDisplay = (() => {
-    const placeShipsBoard = () => {
+    const clearMain = () => {
+        const main = document.querySelector('main');
+        Array.from(main.childNodes).forEach(node => node.remove())
+    }
 
+    const placeShipsBoard = () => {
+        clearMain();
         const container = document.createElement('div');
         container.className = 'place-ship-container';
         const rotateButton = document.createElement('button');
