@@ -1,4 +1,4 @@
-// import './style.css';
+import './style.css';
 
 const shipFactory = length => {
     return {
@@ -59,3 +59,32 @@ const gameboardFactory = () => {
 
     return {board}
 }
+
+const boardDisplay = (() => {
+    const placeShipsBoard = () => {
+
+        const container = document.createElement('div');
+        container.className = 'place-ship-container';
+        const rotateButton = document.createElement('button');
+        rotateButton.textContent = 'Rotate';
+        rotateButton.className = 'rotate-btn';
+        container.appendChild(rotateButton);
+        const board = document.createElement('div');
+        board.className = 'board';
+
+        for (let i=0; i<10; i++) {
+            for (let j=0; j<10; j++) {
+                const cell = document.createElement('div');
+                cell.className = 'cell';
+                cell.dataset.column = j;
+                cell.dataset.row = i;
+                board.appendChild(cell);
+            }
+        }
+        container.appendChild(board)
+        document.querySelector('main').appendChild(container);
+    }
+    return {placeShipsBoard}
+})();
+
+boardDisplay.placeShipsBoard();
