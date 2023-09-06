@@ -70,9 +70,13 @@ const boardDisplay = (() => {
         clearMain();
         const container = document.createElement('div');
         container.className = 'place-ship-container';
+        let axis = 'x';
         const rotateButton = document.createElement('button');
         rotateButton.textContent = 'Rotate';
         rotateButton.className = 'rotate-btn';
+        rotateButton.addEventListener('click', () => {
+            axis = axis === 'x' ? 'y':'x';
+        });
         container.appendChild(rotateButton);
         const board = document.createElement('div');
         board.className = 'board';
