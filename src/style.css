@@ -48,6 +48,13 @@ main {
     justify-items: center;
 }
 
+.danger {
+    background-color: var(--danger-color);
+}
+
+.safe {
+    background-color: var(--sea-color);
+}
 /* footer {
     height: max(10vh, 75px);
 } */

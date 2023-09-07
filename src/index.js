@@ -27,7 +27,7 @@ const gameboardFactory = () => {
         [null, null, null, null, null, null, null, null, null, null],
         [null, null, null, null, null, null, null, null, null, null],
         [null, null, null, null, null, null, null, null, null, null],
-    ]
+    ];
 
     let attacks = [];
     let ships = [];
@@ -57,15 +57,16 @@ const gameboardFactory = () => {
         return true;
     }
 
-    return {board}
+    return {board};
 }
 
 const boardDisplay = (() => {
     const clearMain = () => {
         const main = document.querySelector('main');
-        Array.from(main.childNodes).forEach(node => node.remove())
+        Array.from(main.childNodes).forEach(node => node.remove());
     }
 
+    
     const placeShipsBoard = () => {
         clearMain();
         const container = document.createElement('div');
@@ -92,8 +93,65 @@ const boardDisplay = (() => {
         }
         container.appendChild(board)
         document.querySelector('main').appendChild(container);
+        const getShipCells = (cell, length) => {
+            const column = parseInt(cell.dataset.column);
+            const row = parseInt(cell.dataset.row);
+            const shipCells = [];
+            if (axis === 'x') {
+                for (let i = column; i-column<length; i++) {
+                    shipCells.push(document.querySelector(`.cell[data-column="${i}"][data-row="${row}"]`));
+                }
+            }
+            if (axis === 'y') {
+                const column = parseInt(cell.dataset.column);
+                for (let i = row; i-row<length; i++) {
+                    shipCells.push(document.querySelector(`.cell[data-column="${column}"][data-row="${i}"]`));
+                }
+            }
+            return shipCells;
+        }
+
+        const verifyCells = cells => {
+            for (let i=0; i < cells.length; i++) {
+                if (!cells[i]) return false;
+                if (Array.from(cells[i].classList).includes('occupied')) return false;
+            }
+            return true;
+        }
+
+        const unHighlightCells = cells => {
+            cells.forEach(cell => {
+                cell.classList.remove('danger');
+                cell.classList.remove('safe');
+            })
+        }
+
+        const highlightCells = cells => {
+            const isValid = verifyCells(cells)
+            cells[0].addEventListener('mouseout', () => {
+              unHighlightCells(cells);
+            });
+            if (!isValid) cells[0].classList.add('danger')
+            else {
+                cells.forEach(cell => {
+                    cell.classList.add('safe');
+                });
+            }
+        }
+
+        const placeShip = length => {
+            const cells = document.querySelectorAll('.cell');
+            cells.forEach(cell => {
+                cell.addEventListener('mouseover', () => {
+                const shipCells = getShipCells(cell, length);
+                highlightCells(shipCells);
+                console.log(shipCells);
+                })
+            })
+        }
+        placeShip(5);
     }
-    return {placeShipsBoard}
+    return {placeShipsBoard};
 })();
 
 boardDisplay.placeShipsBoard();
