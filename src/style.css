@@ -55,6 +55,11 @@ main {
 .safe {
     background-color: var(--sea-color);
 }
+
+.occupied {
+    background-color: blue;
+}
+
 /* footer {
     height: max(10vh, 75px);
 } */

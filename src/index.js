@@ -69,6 +69,7 @@ const boardDisplay = (() => {
     
     const placeShipsBoard = () => {
         clearMain();
+        let ships = [];
         const container = document.createElement('div');
         container.className = 'place-ship-container';
         let axis = 'x';
@@ -121,8 +122,10 @@ const boardDisplay = (() => {
 
         const unHighlightCells = cells => {
             cells.forEach(cell => {
-                cell.classList.remove('danger');
-                cell.classList.remove('safe');
+                if (cell) {
+                    cell.classList.remove('danger');
+                    cell.classList.remove('safe');
+                }
             })
         }
 
@@ -142,14 +145,41 @@ const boardDisplay = (() => {
         const placeShip = length => {
             const cells = document.querySelectorAll('.cell');
             cells.forEach(cell => {
-                cell.addEventListener('mouseover', () => {
+            cell.addEventListener('mouseover', () => {
                 const shipCells = getShipCells(cell, length);
                 highlightCells(shipCells);
                 console.log(shipCells);
+                cell.addEventListener('click', () => {
+                    const shipCells = getShipCells(cell, length);
+                    const shipCoordinates = [];
+                    console.log('clicked')
+                    if (verifyCells(shipCells)) {
+                        console.log('place ship')
+                        shipCells.forEach(cell => {
+                            cell.classList.add('occupied')
+                            shipCoordinates.push([parseInt(cell.dataset.row), parseInt(cell.dataset.column)])
+                        })
+                        document.querySelectorAll('.cell').forEach(cell => {
+                            cell.replaceWith(cell.cloneNode(true))
+                        })
+                        ships.push(shipCoordinates)
+                        console.log(ships)
+                        if (ships.length === 1) {
+                            placeShip(4)
+                        }
+                        else if (ships.length === 2 || ships.length === 3) {
+                            placeShip(3)
+                        }
+                        else if (ships.length === 4) {
+                            placeShip(2)
+                        }
+                        else return ships
+                    }
                 })
             })
+        })
         }
-        placeShip(5);
+        console.log(placeShip(5));
     }
     return {placeShipsBoard};
 })();
