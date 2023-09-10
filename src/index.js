@@ -60,13 +60,96 @@ const gameboardFactory = () => {
     return {board};
 }
 
+
+
+const getPlayersBoard = (() => {
+
+    const getShipCoordinate = length => {
+        const dimensions = ['x', 'y']
+        let axis = dimensions[Math.floor(Math.random()*dimensions.length)]
+        if (axis === 'x') {
+            const y = Math.floor(Math.random()*10);
+            const startingX = Math.floor(Math.random()*(10-length));
+            const coordinates = [];
+            for (let i=0; i<length; i++) {
+                coordinates.push([y, startingX + i])
+            }
+            return coordinates;
+        }
+        if (axis === 'y') {
+            const x = Math.floor(Math.random()*10);
+            const startingY = Math.floor(Math.random()*(10-length));
+            const coordinates = [];
+            for (let i=0; i<length; i++) {
+                coordinates.push([startingY + i, x])
+            }
+            return coordinates;
+        }
+    }
+
+    const verifyCoordinates = (coordinates, board) => {
+        for (let i = 0; i<coordinates.length; i++) {
+            if (board[coordinates[i][0]][coordinates[i][1]]) return false
+        }
+        return true;
+    }
+
+    const getComputerBoard = () => {
+        const computerBoard = gameboardFactory();
+        const ship1 = shipFactory(5);
+        let ship1Coordinates = getShipCoordinate(5);
+        computerBoard.placeShip(ship1, ship1Coordinates);
+        const ship2 = shipFactory(4);
+        let ship2Coordinates = getShipCoordinate(4);
+        while(verifyCoordinates(ship2Coordinates, computerBoard.board)) {
+            ship2Coordinates = getShipCoordinate(4);
+        }
+        computerBoard.placeShip(ship2, ship2Coordinates);
+        const ship3 = shipFactory(3);
+        let ship3Coordinates = getShipCoordinate(3);
+        while(verifyCoordinates(ship3Coordinates, computerBoard.board)) {
+            ship3Coordinates = getShipCoordinate(3);
+        }
+        computerBoard.placeShip(ship3, ship3Coordinates);
+        const ship4 = shipFactory(3);
+        let ship4Coordinates = getShipCoordinate(3);
+        while(verifyCoordinates(ship4Coordinates, computerBoard.board)) {
+            ship4Coordinates = getShipCoordinate(3);
+        }
+        computerBoard.placeShip(ship4, ship4Coordinates);
+        const ship5 = shipFactory(2);
+        let ship5Coordinates = getShipCoordinate(2);
+        while(verifyCoordinates(ship5Coordinates, computerBoard.board)) {
+            ship5Coordinates = getShipCoordinate(2);
+        }
+        computerBoard.placeShip(ship5, ship5Coordinates);
+        return computerBoard;
+    }
+
+    let playerShips = []
+    const getPlayerBoard = () => {
+
+        const playersBoard = gameboardFactory();
+        const ships = boardDisplay.playerShips;
+        for (let i=0; i<ships.length; i++) {
+            let ship = shipFactory(ships[i].length);
+            let shipCoordinates = ships[i];
+            playersBoard.placeShip(ship, shipCoordinates);
+        }
+        return playersBoard;
+    }
+
+    return {getComputerBoard, getPlayerBoard, playerShips};
+})();
+
+
 const boardDisplay = (() => {
     const clearMain = () => {
         const main = document.querySelector('main');
         Array.from(main.childNodes).forEach(node => node.remove());
     }
 
-    
+    let playerShips = [];
     const placeShipsBoard = () => {
         clearMain();
         let ships = [];
@@ -152,9 +235,7 @@ const boardDisplay = (() => {
                 cell.addEventListener('click', () => {
                     const shipCells = getShipCells(cell, length);
                     const shipCoordinates = [];
-                    console.log('clicked')
                     if (verifyCells(shipCells)) {
-                        console.log('place ship')
                         shipCells.forEach(cell => {
                             cell.classList.add('occupied')
                             shipCoordinates.push([parseInt(cell.dataset.row), parseInt(cell.dataset.column)])
@@ -163,7 +244,7 @@ const boardDisplay = (() => {
                             cell.replaceWith(cell.cloneNode(true))
                         })
                         ships.push(shipCoordinates)
-                        console.log(ships)
+                        console.log('ships', ships)
                         if (ships.length === 1) {
                             placeShip(4)
                         }
@@ -173,15 +254,21 @@ const boardDisplay = (() => {
                         else if (ships.length === 4) {
                             placeShip(2)
                         }
-                        else return ships
+                        else getPlayersBoard.playerShips = ships
                     }
                 })
             })
         })
         }
-        console.log(placeShip(5));
+        console.log('ships', placeShip(5));
     }
-    return {placeShipsBoard};
+
+
+
+    return {placeShipsBoard, playerShips};
 })();
+
+
+
 
 boardDisplay.placeShipsBoard();
