@@ -14,9 +14,15 @@ const shipFactory = length => {
     }
 }
 
+const playerFactory = (name,board) => {
+    return {
+        name,
+        board,
+    }
+}
+
 const gameboardFactory = () => {
     let board = [
-        [null, null, null, null, null, null, null, null, null, null],
         [null, null, null, null, null, null, null, null, null, null],
         [null, null, null, null, null, null, null, null, null, null],
         [null, null, null, null, null, null, null, null, null, null],
@@ -57,7 +63,7 @@ const gameboardFactory = () => {
         return true;
     }
 
-    return {board};
+    return {board, placeShip, receiveAttack, isDefeated};
 }
 
 
@@ -101,36 +107,34 @@ const getPlayersBoard = (() => {
         computerBoard.placeShip(ship1, ship1Coordinates);
         const ship2 = shipFactory(4);
         let ship2Coordinates = getShipCoordinate(4);
-        while(verifyCoordinates(ship2Coordinates, computerBoard.board)) {
+        while(!verifyCoordinates(ship2Coordinates, computerBoard.board)) {
             ship2Coordinates = getShipCoordinate(4);
         }
         computerBoard.placeShip(ship2, ship2Coordinates);
         const ship3 = shipFactory(3);
         let ship3Coordinates = getShipCoordinate(3);
-        while(verifyCoordinates(ship3Coordinates, computerBoard.board)) {
+        while(!verifyCoordinates(ship3Coordinates, computerBoard.board)) {
             ship3Coordinates = getShipCoordinate(3);
         }
         computerBoard.placeShip(ship3, ship3Coordinates);
         const ship4 = shipFactory(3);
         let ship4Coordinates = getShipCoordinate(3);
-        while(verifyCoordinates(ship4Coordinates, computerBoard.board)) {
+        while(!verifyCoordinates(ship4Coordinates, computerBoard.board)) {
             ship4Coordinates = getShipCoordinate(3);
         }
         computerBoard.placeShip(ship4, ship4Coordinates);
         const ship5 = shipFactory(2);
         let ship5Coordinates = getShipCoordinate(2);
-        while(verifyCoordinates(ship5Coordinates, computerBoard.board)) {
+        while(!verifyCoordinates(ship5Coordinates, computerBoard.board)) {
             ship5Coordinates = getShipCoordinate(2);
         }
         computerBoard.placeShip(ship5, ship5Coordinates);
         return computerBoard;
     }
 
-    let playerShips = []
-    const getPlayerBoard = () => {
+    const getPlayerBoard = (ships) => {
 
         const playersBoard = gameboardFactory();
-        const ships = boardDisplay.playerShips;
         for (let i=0; i<ships.length; i++) {
             let ship = shipFactory(ships[i].length);
             let shipCoordinates = ships[i];
@@ -139,7 +143,7 @@ const getPlayersBoard = (() => {
         return playersBoard;
     }
 
-    return {getComputerBoard, getPlayerBoard, playerShips};
+    return {getComputerBoard, getPlayerBoard};
 })();
 
 
@@ -148,6 +152,127 @@ const boardDisplay = (() => {
         const main = document.querySelector('main');
         Array.from(main.childNodes).forEach(node => node.remove());
     }
+
+    const getBoardHTML = () => {
+        const board = document.createElement('div');
+        board.className = 'board';
+
+        for (let i=0; i<10; i++) {
+            for (let j=0; j<10; j++) {
+                const cell = document.createElement('div');
+                cell.className = 'cell';
+                cell.dataset.column = j;
+                cell.dataset.row = i;
+                board.appendChild(cell);
+            }
+        }
+        return board
+    }
+
+    const displayBattleBoard = (() => {
+        
+        const renderBattleBoards = () => {
+            clearMain();
+            const playerBoardHTML = getBoardHTML();
+            playerBoardHTML.classList.add('player-board');
+            const computerBoardHTML = getBoardHTML();
+            computerBoardHTML.classList.add('computer-board');
+            const container = document.createElement('div')
+            container.className = 'battle-board-container';
+            container.appendChild(playerBoardHTML);
+            container.appendChild(computerBoardHTML);
+            document.querySelector('main').appendChild(container);
+
+        }
+        
+        const receiveAttack = (player, coordinates) => {
+            if (player.board.board[coordinates[0]][coordinates[1]]) {
+                player.board.receiveAttack(coordinates)
+            }
+        }
+        
+        
+        
+        const startGame = playerShips => {
+            const playerBoard = getPlayersBoard.getPlayerBoard(playerShips);
+            const computerBoard = getPlayersBoard.getComputerBoard();
+            const player = playerFactory('player',  playerBoard);
+            const computer = playerFactory('computer', computerBoard);
+            const getRoundPlayer = (round) => {
+                if (round % 2 === 1) return player;
+                else return computer;
+            }
+            let playerOccupiedCells = [];
+            let computerOccupiedCells = [];
+            for (let i=0; i<10; i++) {
+                for (let j=0; j<10; j++) {
+                    if (playerBoard.board[i][j]) playerOccupiedCells.push([i, j])
+                    if (computerBoard.board[i][j]) computerOccupiedCells.push([i, j])
+
+                }
+            }
+            let playerAttackedCells = [];
+            let computerAttackedCells = [];
+            const attackedCellsContain = (cellCoordinates, cells) => {
+                for(let i=0; i<cells.length; i++) {
+                    if (cells[i][0] === cellCoordinates[0] && cells[i][1] === cellCoordinates[1]) return true;
+                }
+                return false;
+            }
+
+            renderBattleBoards();
+            const startRound = round => {
+                // if (player.board.isDefeated() || computer.board.isDefeated()) {
+                //     console.log('game over')
+                //     return
+                // }
+                let roundPlayer = getRoundPlayer(round);
+                document.querySelectorAll('.cell').forEach(cell => cell.replaceWith(cell.cloneNode(true)))
+                if (roundPlayer === player) {
+                    console.log('player turn')
+                    const playerCells = document.querySelectorAll('.computer-board .cell');
+                    playerCells.forEach(cell => {
+                        const row = parseInt(cell.dataset.row);
+                        const column = parseInt(cell.dataset.column);
+                        if (!attackedCellsContain([row, column], computerAttackedCells)) {
+                            cell.addEventListener('click', () => {
+                                if (computer.board.board[row][column]) {
+                                    receiveAttack(roundPlayer, [row, column])
+                                    cell.classList.add('attacked');
+                                }  else {
+                                    cell.classList.add('safe');
+                                }
+                                computerAttackedCells.push([row, column]);
+                                startRound(round+1);
+                            })
+                        }
+    
+                    })
+                } else  if (roundPlayer === computer) {
+                    console.log('computer turn')
+                    const playerCells = document.querySelectorAll('.player-board .cell');
+                    let row = Math.floor(Math.random()*10);
+                    let column = Math.floor(Math.random()*10);
+                    while(attackedCellsContain([row, column], playerAttackedCells)) {
+                        row = Math.floor(Math.random()*10);
+                        column = Math.floor(Math.random()*10);
+                    }
+                    const cell = document.querySelector(`.player-board .cell[data-row="${row}"][data-column="${column}"]`)
+                    if (player.board.board[row][column]) {
+                        receiveAttack(player, [row, column]);
+                        cell.classList.add('attacked')
+                    }  else {
+                        cell.classList.add('safe')
+                    }
+                    playerAttackedCells.push([row, column])
+                    startRound(round+1)
+
+                }
+            }
+            startRound(1);
+        }
+        return {startGame}
+    })();
 
     let playerShips = [];
     const placeShipsBoard = () => {
@@ -163,18 +288,7 @@ const boardDisplay = (() => {
             axis = axis === 'x' ? 'y':'x';
         });
         container.appendChild(rotateButton);
-        const board = document.createElement('div');
-        board.className = 'board';
-
-        for (let i=0; i<10; i++) {
-            for (let j=0; j<10; j++) {
-                const cell = document.createElement('div');
-                cell.className = 'cell';
-                cell.dataset.column = j;
-                cell.dataset.row = i;
-                board.appendChild(cell);
-            }
-        }
+        const board = getBoardHTML()
         container.appendChild(board)
         document.querySelector('main').appendChild(container);
         const getShipCells = (cell, length) => {
@@ -254,7 +368,9 @@ const boardDisplay = (() => {
                         else if (ships.length === 4) {
                             placeShip(2)
                         }
-                        else getPlayersBoard.playerShips = ships
+                        else {
+                            displayBattleBoard.startGame(ships);
+                        }
                     }
                 })
             })
@@ -263,7 +379,7 @@ const boardDisplay = (() => {
         console.log('ships', placeShip(5));
     }
 
-
+    
 
     return {placeShipsBoard, playerShips};
 })();

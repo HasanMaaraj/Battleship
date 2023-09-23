@@ -60,6 +60,12 @@ main {
     background-color: blue;
 }
 
+
+.battle-board-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
 /* footer {
     height: max(10vh, 75px);
 } */
