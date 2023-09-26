@@ -1,17 +1,35 @@
 :root {
     --earth-color: #8D8741;
     --light-earth-color: #a1961a;
-    --sea-color: #659DBD;
+    --sea-color: #006994;
     --light-sea-color: #659DBD;
     --dark-sea-color: #486591;
-    --danger-color: #FF5B00;
-    --safe-color: #CCFFFF;
+    --danger-color: #FF0E0E;
     --steel-color: #A8B0B2;
 }
+@font-face {
+    font-family: 'boycottregular';
+    src: url('./fonts/web\ fonts/boycott_regular_macroman/BOYCOTT_-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
 
-body {
-    font-family: Arial, Helvetica, sans-serif;
-    color: var(--steel-color);
+}
+
+
+
+body,
+button {
+    font-family: 'boycottregular';
+    /* color: var(--steel-color); */
+}
+
+header {
+    font-family: 'boycottregular';
+    font-size: 3rem;
+}
+
+footer {
+    font-size: 1.5rem;
 }
 
 header,
@@ -19,7 +37,7 @@ footer {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: var(--light-earth-color);
+    background-color: var(--earth-color);
     height: max(10vh, 75px);
 }
 
@@ -28,16 +46,27 @@ main {
     height: max(80vh, 600px);
 }
 
+.rotate-btn {
+    font-size: 2rem;
+    background-color: var(--light-earth-color);
+    height: 6rem;
+    width: 12rem;
+    border-radius: 1rem;
+}
+
 .board {
     height: 50rem;
     width: 50rem;
-    background-color: white;
+    padding: 2rem;
+    border-radius: 2rem;
+    background-color: var(--light-earth-color);
     display: grid;
     grid-template-columns: repeat(10, 1fr);
 }
 
 .cell {
-    border: 1px solid black;
+    border: 0.2px solid var(--steel-color);
+    background-color: white;
 }
 
 .place-ship-container {
@@ -48,8 +77,13 @@ main {
     justify-items: center;
 }
 
-.danger {
+.danger, 
+.attacked {
     background-color: var(--danger-color);
+}
+
+.empty {
+    background-color: var(--light-sea-color);
 }
 
 .safe {
@@ -57,14 +91,17 @@ main {
 }
 
 .occupied {
-    background-color: blue;
+    background-color: var(--sea-color);
 }
 
 
 .battle-board-container {
+    height: 100%;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 20px;
+    justify-items: center;
+    align-items: center;
 }
 /* footer {
     height: max(10vh, 75px);

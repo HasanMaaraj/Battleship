@@ -24,7 +24,7 @@ module.exports = {
             },
             {
                 test: /\.(woff|woff2|eot|ttf|otf)$/i,
-                use: 'asset/resource',
+                type: 'asset/resource',
             },
             {
                 test: /\.(?:js|mjs|cjs)$/,

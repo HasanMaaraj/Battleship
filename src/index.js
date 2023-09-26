@@ -321,7 +321,7 @@ const boardDisplay = (() => {
             cells.forEach(cell => {
                 if (cell) {
                     cell.classList.remove('danger');
-                    cell.classList.remove('safe');
+                    cell.classList.remove('empty');
                 }
             })
         }
@@ -334,7 +334,7 @@ const boardDisplay = (() => {
             if (!isValid) cells[0].classList.add('danger')
             else {
                 cells.forEach(cell => {
-                    cell.classList.add('safe');
+                    cell.classList.add('empty');
                 });
             }
         }
