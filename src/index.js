@@ -392,7 +392,7 @@ const boardDisplay = (() => {
             })
         })
         }
-        placeShip(5)
+        placeShip(5);
     }
 
     
