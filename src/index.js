@@ -8,7 +8,7 @@ const shipFactory = length => {
             this.hits++
         },
         isSunk() {
-            return hits >= length;
+            return this.hits >= length;
         }
 
     }
@@ -58,7 +58,7 @@ const gameboardFactory = () => {
 
     const isDefeated = () => {
         for (let i=0; i < ships.length; i++) {
-            if (!ships[i].isSunk) return false;
+            if (!ships[i].isSunk()) return false;
         }
         return true;
     }
@@ -192,7 +192,23 @@ const boardDisplay = (() => {
         }
         
         
-        
+        const announceWinner = winner => {
+            clearMain();
+            const container = document.createElement('div');
+            container.className = 'winner-container';
+            const winnerAnnouncement = document.createElement('div');
+            winnerAnnouncement.textContent = `${winner.name} is the winner.`;
+            winnerAnnouncement.className = 'winner';
+            container.appendChild(winnerAnnouncement);
+            const playAgainButton = document.createElement('button');
+            playAgainButton.textContent = 'Play Again'
+            playAgainButton.addEventListener('click', () => {
+                window.location.reload()
+            })
+            container.appendChild(playAgainButton);
+            document.querySelector('main').appendChild(container)
+        }
+
         const startGame = playerShips => {
             const playerBoard = getPlayersBoard.getPlayerBoard(playerShips);
             const computerBoard = getPlayersBoard.getComputerBoard();
@@ -222,12 +238,15 @@ const boardDisplay = (() => {
 
             renderBattleBoards();
             const startRound = round => {
-                // if (player.board.isDefeated() || computer.board.isDefeated()) {
-                //     console.log('game over')
-                //     return
-                // }
-                let roundPlayer = getRoundPlayer(round);
                 document.querySelectorAll('.cell').forEach(cell => cell.replaceWith(cell.cloneNode(true)))
+                if (computer.board.isDefeated()) {
+                    announceWinner(player);
+                    return;
+                } else if (player.board.isDefeated()) {
+                    announceWinner(computer);
+                    return;
+                }
+                let roundPlayer = getRoundPlayer(round);
                 if (roundPlayer === player) {
                     console.log('player turn')
                     const playerCells = document.querySelectorAll('.computer-board .cell');
@@ -238,6 +257,7 @@ const boardDisplay = (() => {
                             cell.addEventListener('click', () => {
                                 if (computer.board.board[row][column]) {
                                     receiveAttack(roundPlayer, [row, column])
+                                    receiveAttack(computer, [row, column]);
                                     cell.classList.add('attacked');
                                 }  else {
                                     cell.classList.add('safe');

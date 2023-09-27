@@ -46,11 +46,11 @@ main {
     height: max(80vh, 600px);
 }
 
-.rotate-btn {
-    font-size: 2rem;
+button{
+    font-size: 1rem;
     background-color: var(--light-earth-color);
-    height: 6rem;
-    width: 12rem;
+    height: 4rem;
+    width: 8rem;
     border-radius: 1rem;
 }
 
@@ -106,3 +106,16 @@ main {
 /* footer {
     height: max(10vh, 75px);
 } */
+
+.winner-container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap:25px
+}
+
+.winner {
+    font-size: 3rem;
+}
