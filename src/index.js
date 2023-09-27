@@ -5,7 +5,7 @@ const shipFactory = length => {
         length,
         hits:0,
         hit() {
-            this.hits++
+            this.hits++;
         },
         isSunk() {
             return this.hits >= length;
@@ -14,7 +14,7 @@ const shipFactory = length => {
     }
 }
 
-const playerFactory = (name,board) => {
+const playerFactory = (name, board) => {
     return {
         name,
         board,
@@ -50,7 +50,7 @@ const gameboardFactory = () => {
     
     const receiveAttack = coordinates => {
         if (attacks.includes(coordinates)) return;
-        attacks.push(coordinates)
+        attacks.push(coordinates);
         if (board[coordinates[0]][coordinates[1]]) {
             board[coordinates[0]][coordinates[1]].hit();
         }
@@ -71,14 +71,14 @@ const gameboardFactory = () => {
 const getPlayersBoard = (() => {
 
     const getShipCoordinate = length => {
-        const dimensions = ['x', 'y']
-        let axis = dimensions[Math.floor(Math.random()*dimensions.length)]
+        const dimensions = ['x', 'y'];
+        let axis = dimensions[Math.floor(Math.random()*dimensions.length)];
         if (axis === 'x') {
             const y = Math.floor(Math.random()*10);
             const startingX = Math.floor(Math.random()*(10-length));
             const coordinates = [];
             for (let i=0; i<length; i++) {
-                coordinates.push([y, startingX + i])
+                coordinates.push([y, startingX + i]);
             }
             return coordinates;
         }
@@ -87,7 +87,7 @@ const getPlayersBoard = (() => {
             const startingY = Math.floor(Math.random()*(10-length));
             const coordinates = [];
             for (let i=0; i<length; i++) {
-                coordinates.push([startingY + i, x])
+                coordinates.push([startingY + i, x]);
             }
             return coordinates;
         }
@@ -95,7 +95,7 @@ const getPlayersBoard = (() => {
 
     const verifyCoordinates = (coordinates, board) => {
         for (let i = 0; i<coordinates.length; i++) {
-            if (board[coordinates[i][0]][coordinates[i][1]]) return false
+            if (board[coordinates[i][0]][coordinates[i][1]]) return false;
         }
         return true;
     }
@@ -166,7 +166,7 @@ const boardDisplay = (() => {
                 board.appendChild(cell);
             }
         }
-        return board
+        return board;
     }
 
     const displayBattleBoard = (() => {
@@ -177,7 +177,7 @@ const boardDisplay = (() => {
             playerBoardHTML.classList.add('player-board');
             const computerBoardHTML = getBoardHTML();
             computerBoardHTML.classList.add('computer-board');
-            const container = document.createElement('div')
+            const container = document.createElement('div');
             container.className = 'battle-board-container';
             container.appendChild(playerBoardHTML);
             container.appendChild(computerBoardHTML);
@@ -187,7 +187,7 @@ const boardDisplay = (() => {
         
         const receiveAttack = (player, coordinates) => {
             if (player.board.board[coordinates[0]][coordinates[1]]) {
-                player.board.receiveAttack(coordinates)
+                player.board.receiveAttack(coordinates);
             }
         }
         
@@ -201,12 +201,12 @@ const boardDisplay = (() => {
             winnerAnnouncement.className = 'winner';
             container.appendChild(winnerAnnouncement);
             const playAgainButton = document.createElement('button');
-            playAgainButton.textContent = 'Play Again'
+            playAgainButton.textContent = 'Play Again';
             playAgainButton.addEventListener('click', () => {
-                window.location.reload()
+                window.location.reload();
             })
             container.appendChild(playAgainButton);
-            document.querySelector('main').appendChild(container)
+            document.querySelector('main').appendChild(container);
         }
 
         const startGame = playerShips => {
@@ -222,8 +222,8 @@ const boardDisplay = (() => {
             let computerOccupiedCells = [];
             for (let i=0; i<10; i++) {
                 for (let j=0; j<10; j++) {
-                    if (playerBoard.board[i][j]) playerOccupiedCells.push([i, j])
-                    if (computerBoard.board[i][j]) computerOccupiedCells.push([i, j])
+                    if (playerBoard.board[i][j]) playerOccupiedCells.push([i, j]);
+                    if (computerBoard.board[i][j]) computerOccupiedCells.push([i, j]);
 
                 }
             }
@@ -238,7 +238,7 @@ const boardDisplay = (() => {
 
             renderBattleBoards();
             const startRound = round => {
-                document.querySelectorAll('.cell').forEach(cell => cell.replaceWith(cell.cloneNode(true)))
+                document.querySelectorAll('.cell').forEach(cell => cell.replaceWith(cell.cloneNode(true)));
                 if (computer.board.isDefeated()) {
                     announceWinner(player);
                     return;
@@ -248,7 +248,6 @@ const boardDisplay = (() => {
                 }
                 let roundPlayer = getRoundPlayer(round);
                 if (roundPlayer === player) {
-                    console.log('player turn')
                     const playerCells = document.querySelectorAll('.computer-board .cell');
                     playerCells.forEach(cell => {
                         const row = parseInt(cell.dataset.row);
@@ -256,7 +255,7 @@ const boardDisplay = (() => {
                         if (!attackedCellsContain([row, column], computerAttackedCells)) {
                             cell.addEventListener('click', () => {
                                 if (computer.board.board[row][column]) {
-                                    receiveAttack(roundPlayer, [row, column])
+                                    receiveAttack(roundPlayer, [row, column]);
                                     receiveAttack(computer, [row, column]);
                                     cell.classList.add('attacked');
                                 }  else {
@@ -269,7 +268,6 @@ const boardDisplay = (() => {
     
                     })
                 } else  if (roundPlayer === computer) {
-                    console.log('computer turn')
                     const playerCells = document.querySelectorAll('.player-board .cell');
                     let row = Math.floor(Math.random()*10);
                     let column = Math.floor(Math.random()*10);
@@ -277,21 +275,21 @@ const boardDisplay = (() => {
                         row = Math.floor(Math.random()*10);
                         column = Math.floor(Math.random()*10);
                     }
-                    const cell = document.querySelector(`.player-board .cell[data-row="${row}"][data-column="${column}"]`)
+                    const cell = document.querySelector(`.player-board .cell[data-row="${row}"][data-column="${column}"]`);
                     if (player.board.board[row][column]) {
                         receiveAttack(player, [row, column]);
-                        cell.classList.add('attacked')
+                        cell.classList.add('attacked');
                     }  else {
-                        cell.classList.add('safe')
+                        cell.classList.add('safe');
                     }
-                    playerAttackedCells.push([row, column])
-                    startRound(round+1)
+                    playerAttackedCells.push([row, column]);
+                    startRound(round+1);
 
                 }
             }
             startRound(1);
         }
-        return {startGame}
+        return {startGame};
     })();
 
     let playerShips = [];
@@ -308,8 +306,8 @@ const boardDisplay = (() => {
             axis = axis === 'x' ? 'y':'x';
         });
         container.appendChild(rotateButton);
-        const board = getBoardHTML()
-        container.appendChild(board)
+        const board = getBoardHTML();
+        container.appendChild(board);
         document.querySelector('main').appendChild(container);
         const getShipCells = (cell, length) => {
             const column = parseInt(cell.dataset.column);
@@ -347,11 +345,11 @@ const boardDisplay = (() => {
         }
 
         const highlightCells = cells => {
-            const isValid = verifyCells(cells)
+            const isValid = verifyCells(cells);
             cells[0].addEventListener('mouseout', () => {
               unHighlightCells(cells);
             });
-            if (!isValid) cells[0].classList.add('danger')
+            if (!isValid) cells[0].classList.add('danger');
             else {
                 cells.forEach(cell => {
                     cell.classList.add('empty');
@@ -365,28 +363,26 @@ const boardDisplay = (() => {
             cell.addEventListener('mouseover', () => {
                 const shipCells = getShipCells(cell, length);
                 highlightCells(shipCells);
-                console.log(shipCells);
                 cell.addEventListener('click', () => {
                     const shipCells = getShipCells(cell, length);
                     const shipCoordinates = [];
                     if (verifyCells(shipCells)) {
                         shipCells.forEach(cell => {
-                            cell.classList.add('occupied')
-                            shipCoordinates.push([parseInt(cell.dataset.row), parseInt(cell.dataset.column)])
+                            cell.classList.add('occupied');
+                            shipCoordinates.push([parseInt(cell.dataset.row), parseInt(cell.dataset.column)]);
                         })
                         document.querySelectorAll('.cell').forEach(cell => {
-                            cell.replaceWith(cell.cloneNode(true))
+                            cell.replaceWith(cell.cloneNode(true));
                         })
-                        ships.push(shipCoordinates)
-                        console.log('ships', ships)
+                        ships.push(shipCoordinates);
                         if (ships.length === 1) {
-                            placeShip(4)
+                            placeShip(4);
                         }
                         else if (ships.length === 2 || ships.length === 3) {
-                            placeShip(3)
+                            placeShip(3);
                         }
                         else if (ships.length === 4) {
-                            placeShip(2)
+                            placeShip(2);
                         }
                         else {
                             displayBattleBoard.startGame(ships);
@@ -396,15 +392,11 @@ const boardDisplay = (() => {
             })
         })
         }
-        console.log('ships', placeShip(5));
     }
 
     
 
     return {placeShipsBoard, playerShips};
 })();
-
-
-
 
 boardDisplay.placeShipsBoard();
