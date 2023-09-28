@@ -7,6 +7,7 @@
     --danger-color: #FF0E0E;
     --steel-color: #A8B0B2;
 }
+
 @font-face {
     font-family: 'boycottregular';
     src: url('./fonts/web\ fonts/boycott_regular_macroman/BOYCOTT_-webfont.woff') format('woff');
@@ -15,8 +16,6 @@
 
 }
 
-
-
 body,
 button {
     font-family: 'boycottregular';
@@ -24,11 +23,11 @@ button {
 
 header {
     font-family: 'boycottregular';
-    font-size: 3rem;
+    font-size: 2rem;
 }
 
 footer {
-    font-size: 1.5rem;
+    font-size: 1rem;
 }
 
 header,
@@ -42,13 +41,13 @@ footer {
 
 main {
     background-color: var(--dark-sea-color);
-    height: max(80vh, 60rem);
+    height: max(80vh, 25rem);
 }
 
 header,
 main,
 footer {
-    width: 158rem;
+    width: 118rem;
 }
 
 button{
@@ -60,10 +59,10 @@ button{
 }
 
 .board {
-    height: 50rem;
-    width: 50rem;
-    padding: 2rem;
-    border-radius: 2rem;
+    height: 30rem;
+    width: 30rem;
+    padding: 1rem;
+    border-radius: 1rem;
     background-color: var(--light-earth-color);
     display: grid;
     grid-template-columns: repeat(10, 1fr);
@@ -77,8 +76,9 @@ button{
 .place-ship-container {
     height: 100%;
     display: grid;
-    align-content: space-around;
+    align-content: center;
     justify-items: center;
+    gap: 2rem;
 }
 
 .danger, 
